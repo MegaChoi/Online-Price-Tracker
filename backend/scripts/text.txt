@@ -1,0 +1,4 @@
+Price
+    Woolworth : price-dollars, price-cents
+    JB: PriceTag_actual__1eb7mu9q 
+    PriceFont_fontStyle__w0cm2q1 PriceTag_priceHeader__1eb7mu91d
