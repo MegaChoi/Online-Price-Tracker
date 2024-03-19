@@ -5,7 +5,7 @@ const nextConfig = {
     },
     images: {
       domains: [
-        'm.media-amazon.com','shop.coles.com.au']
+        'm.media-amazon.com','shop.coles.com.au', 'www.jbhifi.com.au', 'cdn0.woolworths.media']
     }
   }
   

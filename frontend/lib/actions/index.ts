@@ -1,68 +1,25 @@
 "use server"
+import axios, { AxiosResponse, AxiosError } from 'axios';
 
-import { getLowestPrice, getHighestPrice, getAveragePrice } from "../utils";
-import { conenctToDB } from "../mongoose";
-import { scrapeAmazonProduct } from "../scraper/amazon";
-import { scrapeColesProduct } from "../scraper/coles";
-import { scrapeWoolWorthsProduct } from "../scraper/woolworths";
-import { scrapeJBHifiProduct } from "../scraper/jbhifi";
-import  Product from "../models/product.models"
-export async function scrapeAndStoreProduct(productUrl:string, hostname: string) {
-    if(!productUrl) return;
-    
+export async function scrapeAndStoreProduct(productUrl:string, hostname:string) {
     try {
-        conenctToDB();
-
-        let scrapedProduct;
+        const url = API + 'post/' + productUrl + '/';
+        const response = await axios.post(url);
         
-        if(hostname === 'www.coles.com.au'){
-            scrapedProduct = await scrapeColesProduct(productUrl);
-        }else if (hostname === 'www.amazon.com.au'){
-            scrapedProduct = await scrapeAmazonProduct(productUrl);
-        }
-
-        if(!scrapedProduct) return;
-
-        let product = scrapedProduct;
-        
-        const existingProduct = await Product.findOne({url: scrapedProduct.url})
-
-        if(existingProduct){
-            const updatedPriceHistory: any = [
-                ...existingProduct.priceHistory,
-                { price: scrapedProduct.currentPrice },
-                
-            ]
-
-            product = {
-                ...scrapedProduct,
-                priceHistory: updatedPriceHistory,
-                highestPrice: getHighestPrice(updatedPriceHistory),
-                lowestPrice: getLowestPrice(updatedPriceHistory),
-                averagePrice: getAveragePrice(updatedPriceHistory),
-            }
-        }
-
-        const newProduct = await Product.findOneAndUpdate({
-            url: scrapedProduct.url},
-            product,
-            { upsert:true, new :true}
-        )
-
-    } catch (error: any) {
-       throw new Error(`Falied to create/update product: ${error.message}`) 
+        return response.data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
     }
 }
 
+
+
+
 export async function getProductByID(productId: string){
     try {
-        conenctToDB();
-
-        const product = await Product.findOne({_id: productId});
-
-        if(!product) return null;
-
-        return product;
+        const url = API + 'products/'
+        return ;
     } catch (error) {
         console.log(error);
     }
@@ -70,12 +27,13 @@ export async function getProductByID(productId: string){
 
 export async function getAllProducts(){
     try {
-        conenctToDB();
-
-        const products = await Product.find();
-
-        return products;
+        const url = API + 'products/'
+        const response = await axios.post(url);
+        return response.data;
+        
     } catch (error) {
         console.log(error);
     }
 }
+
+const API: string = 'http://127.0.0.1:8000/myapp/';

@@ -12,9 +12,9 @@ const heroImages = [
     { imgUrl : '/assets/images/hero-5.svg', alt:'5'}
 ]
 
-const HeroCarousel = () => {
+const HeroCarousel = ({onClose}) => {
   return (
-    <div className='hero-carousel'>
+    <div className='hero-carousel' onClick={onClose}>
         <Carousel
             showThumbs={false}
             autoPlay

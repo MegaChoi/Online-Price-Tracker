@@ -1,7 +1,7 @@
 "use client"
-import { scrapeAndStoreProduct } from '@/lib/actions';
+import { scrapeAndStoreProduct} from '@/lib/actions';
 import React, {FormEvent, useState } from 'react'
-
+import { useRouter } from 'next/navigation'
 // TODO: fix this method to check url from all sources not just amazon
 const isValidProductURL = (url:string) => {
     try {
@@ -26,27 +26,28 @@ const isValidProductURL = (url:string) => {
 
     return null;
 }
-const SearchBar = () => {
+const SearchBar = (props) => {
     const [searchPrompt, setsearchPrompt] = useState('');
     const [isloading, setIsloading] = useState(false);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
 
-    const hostname = isValidProductURL(searchPrompt);
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
-    if(!hostname) return alert('Please provide a valid link')
-    
+        const hostname = isValidProductURL(searchPrompt);
 
-    try {
-        setIsloading(true);
-        const product = await scrapeAndStoreProduct(searchPrompt, hostname);
-    } catch (error) {
-        console.log(error)
-    }finally {
-        setIsloading(false);
-    }
-  }  
+        if(!hostname) return alert('Please provide a valid link')
+        
+        try {
+            setIsloading(true);
+            const product = await scrapeAndStoreProduct(searchPrompt, hostname);
+            console.log(product)
+        } catch (error) {
+            console.log(error)
+        }finally {
+            setIsloading(false);
+        }
+    }  
 
   return (
     <form 
@@ -55,7 +56,10 @@ const SearchBar = () => {
         >
         <input type="text" 
             value={searchPrompt}
-            onChange={(e) => setsearchPrompt(e.target.value)}
+            onChange={(e) =>{
+                setsearchPrompt(e.target.value)
+                props.searchHandler
+            } }
             placeholder='Enter product link'
             className='searchbar-input'
         />    

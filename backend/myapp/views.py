@@ -1,7 +1,9 @@
 from django.shortcuts import render,HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
+from rest_framework.response import Response
 from django.http.response import JsonResponse
+from rest_framework.renderers import JSONRenderer
 from myapp.models import Product,PriceHistory
 from myapp.serializers import ProductSerializer
 from django.http import HttpResponse, HttpResponseNotAllowed
@@ -66,6 +68,8 @@ def PostProduct(request, url):
                 )
                 newProduct.save()
                 savePriceHistory(newProduct)
+                serialized_product = ProductSerializer(newProduct)
+                return JsonResponse(serialized_product.data, safe=False)
             else:
                 existingProduct.title = product.title
                 existingProduct.imageURL = product.image
@@ -77,12 +81,13 @@ def PostProduct(request, url):
                 existingProduct.averagePrice = getAveragePrice(existingProduct.id)
                 existingProduct.save()
                 savePriceHistory(existingProduct)
-
-            return HttpResponse(status=200)
+                serialized_product = ProductSerializer(existingProduct)
+                return JsonResponse(serialized_product.data, safe=False)
         else:
             # Return a 405 Method Not Allowed response for non-POST requests
             return HttpResponseNotAllowed(['POST'])
     except Exception as e:
+        print(e)
         print('Failed to post product. Invalid link')
         return HttpResponseNotAllowed(['POST'])
 
@@ -109,7 +114,7 @@ def savePriceHistory(product):
     try: 
         PriceHistory.objects.create(
             product=product,
-            date = date.today() + timedelta(days=2),
+            date = date.today(),
             price = product.currentPrice
         )
     except Exception as e:

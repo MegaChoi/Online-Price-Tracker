@@ -15,6 +15,7 @@ chrome_options.add_argument('--disable-gpu')
 # chrome_options.add_argument("--disable-third-party-cookies")
 chrome_options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
 chrome_options.add_argument('--disbale-dev-shm-usage')
+chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument('log-level=3')
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
@@ -68,12 +69,12 @@ def getColes(soup, url):
             originalPrice = originalPrice.getText().replace("| Was $", "").replace(' ', '')
             
         
-        divs = soup.find_all('div', class_=['sc-c1029195-0', 'hFaYaU', 'coles-targeting-SliderSlideSlide'])
+        divs = soup.find_all('div', class_=['sc-c1029195-0', 'buccYd', 'coles-targeting-SliderSlideSlide'])
         images = divs[1].find_all('img')
-        image = images[1]['src']
+        image = images[0]['src']
         
         printInfo(title, currentPrice, originalPrice,image)
-        
+
         return Product(
             url=url,
             title=title,
@@ -110,7 +111,7 @@ def getWoolies(soup,url):
             image=image,
             currentPrice=currentPrice,
             originalPrice=originalPrice,
-            category='WoolWorths'
+            category='Woolworths'
         )
         
     except Exception as e:

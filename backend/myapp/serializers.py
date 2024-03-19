@@ -5,7 +5,7 @@ from myapp.models import Product, PriceHistory
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model=Product
-        fields=('id','url','title','image','currentPrice','originalPrice','priceHistory','lowestPrice','highestPrice','averagePrice','discountRate','category','isOutOfStock')
+        fields=('id','url','title','imageURL','currentPrice','originalPrice','lowestPrice','highestPrice','averagePrice','category','isOutOfStock')
         
 class PriceHistorySerializer(serializers.ModelSerializer):
     class Meta:

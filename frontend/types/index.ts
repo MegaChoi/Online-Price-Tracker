@@ -1,8 +1,7 @@
 export type Product = {
-    _id?: string;
+    id?: string;
     url: string;
-    currency: string;
-    image: string;
+    imageURL: string;
     title: string;
     currentPrice: number;
     originalPrice: number;
@@ -10,7 +9,6 @@ export type Product = {
     highestPrice: number;
     lowestPrice: number;
     averagePrice: number;
-    discountRate: number;
     category: string;
     isOutOfStock: Boolean;
 };
@@ -18,3 +16,4 @@ export type Product = {
 export type PriceHistoryItem = {
     price: number;
 };
+
